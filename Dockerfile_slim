@@ -1,0 +1,23 @@
+# Use a minimal Python image
+FROM python:3.10.2-slim-bookworm
+
+# Set the working directory
+WORKDIR /myapp3
+
+# Install only essential system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libopenblas0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements file separately for better caching
+COPY requirements.txt .
+
+# Install dependencies efficiently
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY . .
+
+# Define the command to run the app
+CMD ["python", "app.py"]

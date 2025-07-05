@@ -1,0 +1,45 @@
+# name: CI/CD Pipeline Build then Push to DockerHub then Deploy to EC2
+
+# on:
+  # push:
+    # branches:
+      # - master
+
+# jobs:
+  # build-push-deploy:
+    # runs-on: ubuntu-latest
+
+    # steps:
+      # # Step 1: Checkout repo
+      # - name: Checkout source code
+        # uses: actions/checkout@v3
+
+      # # Step 2: Login to DockerHub
+      # - name: DockerHub Login
+        # uses: docker/login-action@v2
+        # with:
+          # username: ${{ secrets.DOCKERHUB_USERNAME }}
+          # password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # # Step 3: Build Docker image
+      # - name: Build Docker Image
+        # run: |
+          # docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mymlapp:latest .
+
+      # # Step 4: Push image to DockerHub
+      # - name: Push to DockerHub
+        # run: |
+          # docker push ${{ secrets.DOCKERHUB_USERNAME }}/mymlapp:latest
+
+      # # Step 5: SSH into EC2 and deploy
+      # - name: Deploy on EC2
+        # uses: appleboy/ssh-action@v1.0.0
+        # with:
+          # host: ${{ secrets.EC2_HOST }}
+          # username: ubuntu
+          # key: ${{ secrets.EC2_KEY }}
+          # script: |
+            # docker pull ${{ secrets.DOCKERHUB_USERNAME }}/mymlapp:latest
+            # docker stop mymlapp || true
+            # docker rm mymlapp || true
+            # docker run -d -p 3000:5000 --name mymlapp ${{ secrets.DOCKERHUB_USERNAME }}/mymlapp:latest
