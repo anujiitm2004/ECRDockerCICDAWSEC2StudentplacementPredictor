@@ -35,7 +35,7 @@ docker rmi $(docker images -q)
 
 Ek hi baar me sab kuch clean karne ka One-liner:
 docker stop $(docker ps -q) && docker rm $(docker ps -aq) && docker rmi -f $(docker images -q)
----------------------------------------------------
+----------------------------------------------------
 Docker mai run karna on aws ec2 cloud:
 docker build -t anujiitm2004/s1 .  build the image from local computer ;docker ho on local
 docker push anujiitm2004/s1        push on dockerhub
